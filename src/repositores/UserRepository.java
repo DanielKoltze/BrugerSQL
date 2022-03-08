@@ -90,7 +90,7 @@ public class UserRepository {
         }
     }
 
-      static void deleteUser(int userId) {
+    static void deleteUser(int userId) {
         User selectedUser = selectUser(userId);
         String query = "DELETE FROM brugere WHERE id_bruger = " + userId;
 
@@ -113,6 +113,8 @@ public class UserRepository {
             String query = "SELECT * FROM brugere WHERE id_bruger = " + id;
             ResultSet resultSet = statement.executeQuery(query);
 
+            // While loop en gang imellem??
+            resultSet.next();
             int userId = resultSet.getInt("id_bruger");
             String username = resultSet.getString("brugernavn");
             String password = resultSet.getString("kodeord");
@@ -124,7 +126,6 @@ public class UserRepository {
             e.printStackTrace();
         }
         return selectedUser;
-
 
 
     }
