@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 
 public class UserRepository {
+    //kommentar
 
     private static String DB_URL = "jdbc:mysql://localhost:3306/bruger?useSSL=false&serverTimezone=UTC"; //efter3306 skriver hvad det er for en tabel
     private static String user = "root";
