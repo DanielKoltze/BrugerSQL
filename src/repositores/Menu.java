@@ -1,3 +1,5 @@
+package repositores;
+
 import java.util.Scanner;
 
 public class Menu {
