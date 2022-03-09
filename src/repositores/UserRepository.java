@@ -11,7 +11,7 @@ public class UserRepository {
 
     private static String DB_URL = "jdbc:mysql://localhost:3306/bruger?useSSL=false&serverTimezone=UTC"; //efter3306 skriver hvad det er for en tabel
     private static String user = "root";
-    private static String password = "masp123123";
+    private static String password = "rootroot";
     private static Connection connection;
 
     public static void main(String[] args) {
@@ -23,11 +23,10 @@ public class UserRepository {
             menu.printMenu();
             switch (menu.readChoice()) {
                 case 1:
-                    System.out.println("Skriv brugernavnet efterfulgt af kodeordet:");
-                    String in = input.nextLine();
-                    String[] array = in.split(" ");
-                    String name = array[0];
-                    String password = array[1];
+                    System.out.println("Skriv brugernavnet:");
+                    String name = input.next();
+                    System.out.println("Skriv kodeordet:");
+                    String password = input.next();
                     insertData(name, password);
                     System.out.println("Du har tilføjet " + name + " " + password);
                     break;
@@ -37,7 +36,6 @@ public class UserRepository {
                     System.out.println("Skriv ID på den bruger du vil slette");
                     int userId = input.nextInt();
                     deleteUser(userId);
-
                     break;
                 case 4:
                     showAllRows();
