@@ -24,13 +24,14 @@ public class UserRepository {
             menu.printMenu();
             switch (menu.readChoice()) {
                 case 1:
-                    System.out.println("Skriv brugernavn: ");
+                    System.out.print("Skriv brugernavn: ");
                     String name = input.nextLine();
-                    System.out.println("Skriv kodeord: ");
+                    System.out.print("Skriv kodeord: ");
                     String password = input.nextLine();
+                    System.out.print("Skriv gruppeId: ");
+                    int gruppeId = input.nextInt();
 
-
-                    insertData(name, password);
+                    insertData(name, password, gruppeId);
                     System.out.println("Du har tilføjet " + name + " " + password);
                     break;
                 case 2:
@@ -74,7 +75,7 @@ public class UserRepository {
         }
     }
 
-    static void insertData(String userName, String password) {
+    static void insertData(String userName, String password, int gruppeId) {
         String query = "INSERT INTO brugere VALUES (null,?,?);";  //null er fordi den er autoincromented og ? er fordi vi sætter dem senere
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -97,10 +98,11 @@ public class UserRepository {
 
     static void deleteUser(int userId) {
         User selectedUser = selectUser(userId);
-        String query = "DELETE FROM brugere WHERE id_bruger = " + userId;
+        String query = "DELETE FROM brugere WHERE id_bruger=?";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, userId);
             preparedStatement.executeUpdate();
             System.out.println("You deleted: " + selectedUser);
 
