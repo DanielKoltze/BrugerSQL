@@ -19,23 +19,28 @@ public class UserRepository {
         Menu menu = new Menu("Options til brugere i", "Vælg en af overstående", new String[]{"1. Opret", "2. Update", "3. Slet", "4. Hent", "5. luk program"});
         boolean isRunning = true;
         connectToMySQL();
+        int userId;
         while (isRunning) {
             menu.printMenu();
             switch (menu.readChoice()) {
                 case 1:
-                    System.out.println("Skriv brugernavnet efterfulgt af kodeordet:");
-                    String in = input.nextLine();
-                    String[] array = in.split(" ");
-                    String name = array[0];
-                    String password = array[1];
+                    System.out.println("Skriv brugernavn: ");
+                    String name = input.nextLine();
+                    System.out.println("Skriv kodeord: ");
+                    String password = input.nextLine();
+
+
                     insertData(name, password);
                     System.out.println("Du har tilføjet " + name + " " + password);
                     break;
                 case 2:
+                    System.out.println("Skriv ID på den bruger du vil update");
+                    userId = input.nextInt();
+                    updateUser(userId);
                     break;
                 case 3:
                     System.out.println("Skriv ID på den bruger du vil slette");
-                    int userId = input.nextInt();
+                    userId = input.nextInt();
                     deleteUser(userId);
 
                     break;
@@ -126,6 +131,29 @@ public class UserRepository {
             e.printStackTrace();
         }
         return selectedUser;
+
+
+    }
+    static void updateUser(int userId) {
+        User selectedUser = selectUser(userId);
+        System.out.println("Du har valgt at redigere: " + selectedUser);
+        Scanner input = new Scanner(System.in);
+        System.out.println("Indtast nyt navn: ");
+        String newName = input.next();
+        System.out.println("Vælg nyt password: ");
+        String newPassword = input.next();
+
+        String query = "UPDATE brugere SET brugernavn ='" + newName + "', kodeord='" + newPassword + "' " +
+                "WHERE id_bruger= " + userId;
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.executeUpdate();
+            System.out.println("You updated: " + selectedUser);
+        }
+        catch(Exception e) {
+            System.out.println("Kunne ikke opdatere bruger");
+        }
 
 
     }
