@@ -27,6 +27,7 @@ public class UserInterface {
         ur.connectToMySQL();
         gr.connectToMySQL();
         int userId;
+        int groupID;
         while (isRunning) {
             menu.printMenu();
             switch (menu.readChoice()) {
@@ -67,8 +68,18 @@ public class UserInterface {
 
                     gr.insertGroup(groupName, rights);
                     break;
+                case 6:
+                    System.out.print("Skriv ID på den gruppe du vil opdatere: ");
+                    groupID = input.nextInt();
+                    gr.updateGroup(groupID);
+                    break;
+                case 7:
+                    System.out.println("Skriv ID på den gruppe du vil slette: ");
+                    groupID = input.nextInt();
+                    gr.deleteGroup(groupID);
                 case 8:
                     gr.showAllGroups();
+                    break;
 
                 case 9:
                     isRunning = false;

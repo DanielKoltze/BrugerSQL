@@ -25,7 +25,8 @@ public class UserRepository {
                 int userId = resultSet.getInt("id_bruger");
                 String name = resultSet.getString("brugernavn");
                 String password = resultSet.getString("kodeord");
-                System.out.println(userId + ". " + name + " " + password);
+                int groupId = resultSet.getInt("gruppe_id");
+                System.out.println(userId + ". " + name + " " + password + " " + groupId);
 
             }
         } catch (Exception e) {
@@ -34,14 +35,18 @@ public class UserRepository {
     }
 
     public void insertUser(String userName, String password, int gruppeId) {
-        String query = "INSERT INTO brugere VALUES (null,?,?);";  //null er fordi den er autoincromented og ? er fordi vi sætter dem senere
+        String query = "INSERT INTO brugere VALUES (null,?,?,?);";  //null er fordi den er autoincromented og ? er fordi vi sætter dem senere
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, userName);
             preparedStatement.setString(2, password);
+            preparedStatement.setInt(3, gruppeId);
             preparedStatement.executeUpdate();
+
+            // Bruger ikke User's toString, da der ikke er givet noget ID endnu
+            System.out.println("Du oprettede: " + userName + " " + password);
         } catch (Exception e) {
-            System.out.println("Indsatte ikke række");
+            System.out.println("Indsatte ikke user: " + e.getMessage());
         }
     }
 
@@ -65,8 +70,8 @@ public class UserRepository {
             System.out.println("You deleted: " + selectedUser);
 
         } catch (Exception e) {
-            System.out.print("kunne ikke slette bruger: ");
-            e.printStackTrace();
+            System.out.print("kunne ikke slette bruger: " + e.getMessage());
+
 
         }
     }
@@ -78,39 +83,49 @@ public class UserRepository {
             String query = "SELECT * FROM brugere WHERE id_bruger = " + id;
             ResultSet resultSet = statement.executeQuery(query);
 
-            // While loop en gang imellem??
-            resultSet.next();
-            int userId = resultSet.getInt("id_bruger");
-            String username = resultSet.getString("brugernavn");
-            String password = resultSet.getString("kodeord");
-            selectedUser = new User(userId, username, password);
+            while (resultSet.next()) {
+                int userId = resultSet.getInt("id_bruger");
+                String username = resultSet.getString("brugernavn");
+                String password = resultSet.getString("kodeord");
+                int groupId = resultSet.getInt("gruppe_id");
+                selectedUser = new User(userId, username, password, groupId);
+            }
 
 
         } catch (Exception e) {
-            System.out.print("Kunne ikke hente bruger: ");
+            System.out.print("Kunne ikke hente bruger: " + e.getMessage());
             e.printStackTrace();
         }
         return selectedUser;
     }
     public void updateUser(int userId) {
         User selectedUser = selectUser(userId);
+
         System.out.println("Du har valgt at redigere: " + selectedUser);
         Scanner input = new Scanner(System.in);
         System.out.println("Indtast nyt navn: ");
-        String newName = input.next();
+        String newName = input.nextLine();
         System.out.println("Vælg nyt password: ");
-        String newPassword = input.next();
+        String newPassword = input.nextLine();
+        System.out.println("Vælg nyt gruppe id");
+        int newGroupID = Integer.parseInt(input.nextLine());
 
-        String query = "UPDATE brugere SET brugernavn ='" + newName + "', kodeord='" + newPassword + "' " +
-                "WHERE id_bruger= " + userId;
+        String query = "UPDATE brugere SET brugernavn = ?, kodeord = ?, gruppe_id = ? " +
+                "WHERE id_bruger = ?";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, newName);
+            preparedStatement.setString(2, newPassword);
+            preparedStatement.setInt(3, newGroupID);
+            preparedStatement.setInt(4, userId);
+
             preparedStatement.executeUpdate();
-            System.out.println("You updated: " + selectedUser);
+            User updatedUser = new User(userId, newName, newPassword, newGroupID);
+            System.out.println("You updated: " + selectedUser + "to " + updatedUser);
         }
         catch(Exception e) {
-            System.out.println("Kunne ikke opdatere bruger");
+            System.out.println("Kunne ikke opdatere bruger: " + e.getMessage());
         }
 
     }
