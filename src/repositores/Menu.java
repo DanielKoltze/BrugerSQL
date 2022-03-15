@@ -18,7 +18,7 @@ public class Menu {
         for (String string: menuItems) {
             System.out.println(string);
         }
-        System.out.println(leadText);
+        System.out.print(leadText);
 
     }
 

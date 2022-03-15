@@ -20,6 +20,7 @@ public class UserRepository {
             Statement statement = connection.createStatement();
             String query = "SELECT * FROM brugere";
             ResultSet resultSet = statement.executeQuery(query);
+            System.out.println("Liste med brugere: ");
 
             while (resultSet.next()) {
                 int userId = resultSet.getInt("id_bruger");

@@ -19,10 +19,10 @@ public class UserInterface {
     }
     public void run() {
         Scanner input = new Scanner(System.in);
-        Menu menu = new Menu("Options til brugere i", "Vælg en af overstående",
-                new String[]{"1. Opret bruger", "2. Update bruger", "3. Slet bruger", "4. Hent alle brugere",
+        Menu menu = new Menu("Vælg en af nedenstående muligheder", "Valg: ",
+                new String[]{"1. Opret bruger", "2. Update bruger", "3. Slet bruger", "4. Vis brugere",
                             "5. Opret gruppe", "6. Update gruppe", "7. Slet gruppe",
-                            "8. Hent gruppe", "9. Luk program"});
+                            "8. Vis grupper", "9. Luk program"});
         boolean isRunning = true;
         ur.connectToMySQL();
         gr.connectToMySQL();
@@ -43,7 +43,6 @@ public class UserInterface {
 
 
                     ur.insertUser(name, password, gruppeId);
-                    System.out.println("Du har tilføjet " + name + " " + password);
                     break;
                 case 2:
                     System.out.println("Skriv ID på den bruger du vil update");
@@ -54,7 +53,6 @@ public class UserInterface {
                     System.out.println("Skriv ID på den bruger du vil slette");
                     userId = input.nextInt();
                     ur.deleteUser(userId);
-
                     break;
                 case 4:
                     ur.showAllUsers();
@@ -80,8 +78,8 @@ public class UserInterface {
                 case 8:
                     gr.showAllGroups();
                     break;
-
                 case 9:
+                    System.out.println("Programmet lukker...");
                     isRunning = false;
                     break;
             }
